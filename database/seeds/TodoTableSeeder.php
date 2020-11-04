@@ -11,14 +11,16 @@ class TodoTableSeeder extends Seeder
      */
     public function run()
     {
-        for($i = 1; $i <= 10; $i++){
+        for($i = 1; $i <= 10; $i++)
+        {
             DB::table('users')->insert([
                 'name' => "ユーザー$i",
                 'email' => "hoge+$i@test.com",
                 'password' => bcrypt('password'),                                
             ]);
         }
-        for($i = 1; $i <= 100; $i++){
+        for($i = 1; $i <= 100; $i++)
+        {
             $j = ($i - 1) / 10 + 1;
             $j = (int)($j);
             DB::table('todos')->insert([
@@ -30,6 +32,5 @@ class TodoTableSeeder extends Seeder
                 'user_id' => $j,
             ]);
         }
-
     }
 }
