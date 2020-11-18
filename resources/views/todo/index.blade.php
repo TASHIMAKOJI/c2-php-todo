@@ -22,7 +22,7 @@
                             </a>
                         </td>
                         <td>{{ $todo->due_date }}</td>
-                        <td><a href="/todo/{{ $todo->id }}/edit/" class="btn btn-primary"><i class="fas fa-plus mr-2"></i>編集</a></td>
+                        <td><a href="/todo/{{ $todo->id }}/edit/" class="btn btn-success"><i class="fas fa-edit mr-2"></i>編集</a></td>
                     </tr>
                 @endforeach
                 </tbody>
