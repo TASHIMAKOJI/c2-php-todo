@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\http\Requests\CreateTodoRequest;
+use App\Http\Requests\CreateTodoRequest;
 use App\Todo;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -11,6 +11,7 @@ class TodoController extends Controller
 {
     // ページネーションの件数
     private const PAGE_SIZE = 5;
+
     /**
      * Display a listing of the resource.
      * Todo一覧を取得
@@ -43,9 +44,10 @@ class TodoController extends Controller
         $todo = new Todo();
         $todo->title = $request->title;
         $todo->due_date = $request->due_date;
-        todo()->save();
+        $todo->status = Todo::STATUS_NOT_YET;
 
-        return redirect()->to('/todo',$todo->id);
+        Auth::user()->todos()->save($todo);
+        return redirect()->to('/todo');
     }
 
     /**
@@ -69,7 +71,7 @@ class TodoController extends Controller
     public function edit($id)
     {
         $todo = Auth::user()->todos()->findOrFail($id);
-        return view('todo/edit',compact('todo'));
+        return view('todo/edit', compact('todo'));
     }
 
     /**
@@ -81,13 +83,12 @@ class TodoController extends Controller
      */
     public function update(CreateTodoRequest $request, $id)
     {
-        //フォームから送信されたタスクを書き換える
         $todo = Auth::user()->todos()->findOrFail($id);
         $todo->title = $request->title;
         $todo->due_date = $request->due_date;
-        $todo->status = Todo::STATUS_NOT_YET;
-        Auth::user()->todos()->save($todo);
-        return redirect()->to('/todo');
+        $todo->save();
+
+        return redirect()->to('/todo/' . $todo->id);
     }
 
     /**
@@ -98,6 +99,9 @@ class TodoController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $todo = Auth::user()->todos()->findOrFail($id);
+        $todo->delete();
+
+        return redirect()->to('/todo');
     }
 }
